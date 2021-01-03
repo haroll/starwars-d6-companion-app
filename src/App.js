@@ -1,24 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import Container from './components/Container';
+import HealthChunk  from './components/HealthChunk';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div className="app">
+        <h4 className="username aurebesh-droid">
+          Username and lastname
+        </h4>
+        <Container id={'health-status-container'}>
+          <h6 className="aurebesh-droid">
+            Health
+          </h6>
+          <h5>
+            Health Status
+          </h5>
+          {/* @TODO: health indicator */}
+          {/* @TODO: HealthChunk.map */}
+          <br/>
+          <HealthChunk chunkNumber={3} chunkConsumed={3} chunkType={'STUNNED'}/>
+          <HealthChunk chunkNumber={3} chunkConsumed={1} chunkType={'WOUNDED'}/>
+          <HealthChunk chunkNumber={2} chunkConsumed={0} chunkType={'INCAPACITATED'}/>
+          <HealthChunk chunkNumber={2} chunkConsumed={0} chunkType={'MORTALLY WOUNDED'}/>
+        </Container>
+      </div>
   );
 }
 

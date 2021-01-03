@@ -1,0 +1,86 @@
+html {
+  font-size: 10px;
+}
+
+@font-face {
+  font-family: 'Aurebesh-Droid';
+  src: local('Aurebesh-Droid'), url('./fonts/Aurebesh-Droid.woff') format('woff');
+}
+@font-face {
+  font-family: 'Conthrax';
+  src: local('conthrax-sb'), url('./fonts/conthrax-sb.woff') format('woff');
+}
+body {
+  margin: 0;
+  font-family: 'Conthrax', -apple-system, BlinkMacSystemFont, 'Roboto', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background-color:  #000;
+  /* background-color:  #111; */
+  text-shadow: .125rem 0 rgba(255,0,0,.9), -.125rem 0 rgba(0,0,255,.9);
+  color: #fff;
+}
+
+body::after{
+  content:'';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image:
+  linear-gradient(to top, rgba(255,255,255,.2) 33.33333%, rgba(255,255,255,.4) 33.33333%, rgba(255,255,255,.4) 66.66666%, rgba(255,255,255,.6) 66.66666%),
+  linear-gradient(to right, rgba(255,0,0,.7) 33.33333%, rgba(0,255,0,.7) 33.33333%, rgba(0,255,0,.7) 66.66666%, rgba(0,0,255,.7) 66.66666%);
+
+  
+  background-size: .3rem .3rem;
+  mix-blend-mode: multiply;
+  opacity: .6;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  margin: 0;
+  color: #7e84e6;
+}
+
+h1 {
+  font-size: 2.8rem;
+}
+h2 {
+  font-size: 2.4rem;
+}
+h3 {
+  font-size: 2rem;
+}
+h4 {
+  font-size: 1.7rem;
+}
+h5 {
+  font-size: 1.5rem;
+}
+h6 {
+  font-size: 1.3rem;
+}
+
+.app {
+  margin: 1rem;
+}
+
+.username  {
+  margin-left: 1.6rem
+}
+
+.danger {
+  color: #ea2d0f;
+}
+
+.aurebesh-droid {
+  font-family: 'Aurebesh-Droid';
+  color: #f9e1f2;
+  text-shadow: .15rem 0 rgba(255,0,0,.9), -.15rem 0 rgba(0,0,255,.9), 0 0 1rem rgba(255,0,0,.5), 0 0 2rem rgba(0,0,255,.75);
+}
+
+hr {
+  border-bottom: .1rem solid #2d60bd
+}
