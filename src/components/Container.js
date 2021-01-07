@@ -5,7 +5,7 @@ const NeonContainer = styled.div`
   position: relative;
   margin-top: 1rem;
   padding: .2rem;
-  background: linear-gradient(.9turn, #3a9de2, #2742aa);
+  background: linear-gradient(-.5turn, #2742aa, #000, #000, #3a9de2);
   border-radius: 1rem;
 
   & > div {

@@ -84,7 +84,10 @@ const HealthChunck = props => {
   let full = (props.chunkConsumed === props.chunkNumber) ? true : false;
 
   return (
-    <Flex className={!props.chunkConsumed ? 'empty' : ''}>
+    <Flex
+      className={!props.chunkConsumed ? 'empty' : ''}
+      onClick={props.onClick}
+    >
       <div>
         <ChunkContainer style={chunkStyle} className={(full) ? 'full' : ''}>
           {

@@ -82,5 +82,10 @@ h6 {
 }
 
 hr {
-  border-bottom: .1rem solid #2d60bd
+  border: 0;
+  border-bottom:  .1rem solid #26b;
+}
+
+button {
+  font-family: 'Conthrax';
 }
