@@ -22,7 +22,7 @@ body {
   color: #fff;
 }
 
-body::after{
+/* body::after{
   content:'';
   position: absolute;
   top: 0;
@@ -37,7 +37,7 @@ body::after{
   background-size: .3rem .3rem;
   mix-blend-mode: multiply;
   opacity: .6;
-}
+} */
 
 h1,h2,h3,h4,h5,h6 {
   margin: 0;

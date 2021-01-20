@@ -2,8 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Container from './components/Container';
+import DamageRanger from './components/DamageRanger';
 import HealthChunk  from './components/HealthChunk';
-import HealthIndicator  from './components/HealthIndicator';
+// import HealthIndicator  from './components/HealthIndicator';
 
 const Flex = styled.div`
   display: flex;
@@ -22,21 +23,36 @@ const Button = styled.button`
   color: #26b;
 `;
 
+const DamageIndicator = styled.div`
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+
+  height: 2.4rem;
+  width: 4rem;
+  padding: 0 .3rem;
+
+  background: linear-gradient(to left, #980605 0%, #800 5%, #980605 10%, #800 15%, #980605 20%, #800 25%, #980605  30%, #800 35%, #980605 40%, #800 45%, #980605 50%, #800 55%, #980605 60%, #800 65%, #980605 70%, #800  75%, #980605 80%, #800 85%, #980605 90%, #800 95%, #980605 100%);
+  & > h3 { color: red; }
+`;
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       stunnedMax: 4,
       // stunnedMax: this.props.strength,
-      stunnedConsumed: 3,
-      // stunnedConsumed: 0,
-      woundedConsumed: 1,
-      // woundedConsumed: 0,
-      incapacitatedConsumed: 1,
-      // incapacitatedConsumed: 0,
-      mortallyWoundedConsumed: 1,
-      // mortallyWoundedConsumed: 0,
+      // stunnedConsumed: 3,
+      stunnedConsumed: 0,
+      // woundedConsumed: 1,
+      woundedConsumed: 0,
+      // incapacitatedConsumed: 1,
+      incapacitatedConsumed: 0,
+      // mortallyWoundedConsumed: 1,
+      mortallyWoundedConsumed: 0,
       currentStatus: '',
+      damageTaken: 0,
+      // preventDoubleTap: true,
     };
   }
 
@@ -82,7 +98,103 @@ class App extends React.Component {
   }
 
   handleChange(ev) {
-    console.log(ev.target.valueAsNumber);
+    // console.log(ev.target.valueAsNumber);
+    this.setState({
+      damageTaken: ev.target.valueAsNumber,
+      // preventDoubleTap: false,
+    })
+  }
+
+  takeDamage() {
+    // if (this.state.preventDoubleTap) {
+    //   return;
+    // }
+
+// STUNNED
+    if (this.state.damageTaken < 4) {
+      if (this.state.stunnedConsumed + 1 === this.state.stunnedMax 
+        && this.state.woundedConsumed < 3)  {
+          const woundedDamge = this.state.woundedConsumed + 1;
+          this.setState({ 
+            stunnedConsumed: this.state.stunnedConsumed + 1,
+            woundedConsumed: woundedDamge
+          })
+      } else if (this.state.stunnedConsumed < this.state.stunnedMax) {
+        this.setState({ stunnedConsumed: this.state.stunnedConsumed + 1 })  
+      }
+
+// WOUNDED
+    } else if (this.state.damageTaken < 9) {
+      if (this.state.woundedConsumed + 1 === 3
+        && this.state.incapacitatedConsumed < 2) {
+          const incapacitatedDamage = this.state.incapacitatedConsumed + 1;
+          const woundedDamge = this.state.woundedConsumed + 1;
+          this.setState({
+            stunnedConsumed: this.state.stunnedMax,
+            woundedConsumed: woundedDamge,
+            incapacitatedConsumed: incapacitatedDamage
+          })
+      } else if (this.state.woundedConsumed < 3) {
+        const woundedDamge = this.state.woundedConsumed + 1;
+        this.setState({ 
+          stunnedConsumed: this.state.stunnedMax,
+          woundedConsumed: woundedDamge 
+        })
+      }
+
+// INCAPACITATED
+    } else if (this.state.damageTaken < 13) {
+      if (this.state.incapacitatedConsumed + 1 === 2
+        && this.state.mortallyWoundedConsumed < 2) {
+          const mortallyWoundedDamage = this.state.mortallyWoundedConsumed + 1;
+          this.setState({
+            stunnedConsumed: this.state.stunnedMax,
+            woundedConsumed: 3,
+            incapacitatedConsumed: 2,
+            mortallyWoundedConsumed: mortallyWoundedDamage
+          })
+      } else if (this.state.incapacitatedConsumed < 2) {
+        const incapacitatedDamage = this.state.incapacitatedConsumed + 1;
+        this.setState({ 
+          stunnedConsumed: this.state.stunnedMax,
+          woundedConsumed: 3,
+          incapacitatedConsumed: incapacitatedDamage 
+        })
+      }
+
+// MORTALLY WOUNDED
+    } else if (this.state.damageTaken < 16) {
+      if (this.state.mortallyWoundedConsumed + 1 === 2) {
+        this.setState({
+          stunnedConsumed: this.state.stunnedMax,
+          woundedConsumed: 3,
+          incapacitatedConsumed: 2,
+          mortallyWoundedConsumed: 2
+        })  
+      } else if (this.state.mortallyWoundedConsumed < 2) {
+        const mortallyWoundedDamage = this.state.mortallyWoundedConsumed + 1;
+        this.setState({ 
+          stunnedConsumed: this.state.stunnedMax,
+          woundedConsumed: 3,
+          incapacitatedConsumed: 2,
+          mortallyWoundedConsumed:  mortallyWoundedDamage 
+        })
+      }
+      
+// SUPER DEAD
+    } else {
+      this.setState({
+        stunnedConsumed: this.state.stunnedMax,
+        woundedConsumed: 3,
+        incapacitatedConsumed: 2,
+        mortallyWoundedConsumed: 2
+      })
+    }
+    this.setState({ 
+      damageTaken: 0,
+      // preventDoubleTap: true,
+    })
+    // console.log(this.state.stunnedConsumed)
   }
 
   render() {
@@ -107,8 +219,8 @@ class App extends React.Component {
             </Button>
           </Flex>
           {/* @TODO: health indicator */}
-          <HealthIndicator chunk={[this.state.stunnedMax,3,2,2]}>
-          </HealthIndicator>
+          {/* <HealthIndicator chunk={[this.state.stunnedMax,3,2,2]}>
+          </HealthIndicator> */}
           <br/>
           <HealthChunk 
             chunkType={'stunned'}
@@ -136,7 +248,28 @@ class App extends React.Component {
           />
         </Container>
         <Container id={'damage-progress'}>
-          <input onChange={(e) => this.handleChange(e)} style={{width: '100%'}} type={'range'} min={'1'} max={'16'} step={'1'} />
+          <DamageRanger 
+            damage={this.state.damageTaken}
+          />
+          <input 
+            onChange={(e) => this.handleChange(e)} 
+            style={{
+              position: 'absolute',
+              top: '6rem',
+              width: 'calc(100% - 4rem)',
+              opacity: '0'
+            }}
+            type={'range'}
+            min={'1'}
+            max={'16'}
+            step={'1'}
+            value={this.state.damageTaken}
+          />
+          <DamageIndicator onClick={() => this.takeDamage()} >
+            <h3>
+              +{this.state.damageTaken}
+            </h3>
+          </DamageIndicator>
         </Container>
         <Container id={'state-information'}>
           

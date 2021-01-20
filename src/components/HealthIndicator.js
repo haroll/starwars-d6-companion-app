@@ -68,20 +68,21 @@ const Progress = styled.div`
 `;
 
 const HealthIndicator = props => {
+  let healtChunkNumber = -1;
+
   return (
     <div style={{position: 'relative', margin: '1.6rem 0 1rem'}}>
       <Progress className={''}/>
       <Container>
         {props.chunk.map((chunk) => {
+          ++healtChunkNumber;
           let idx = new Array(chunk);
           idx.fill(chunk, 0);
-          console.log(idx);
           return (
-           <div key={chunk} style={{flexGrow: chunk}}>
+           <div key={'container-' + healtChunkNumber} style={{flexGrow: chunk}}>
             {
-              idx.map(i => {
-                console.log(i);
-                return (<Marker />)
+              idx.map((i, x) => {
+                return (<Marker key={healtChunkNumber + '-' + x} />)
               })
             }
            </div> 
