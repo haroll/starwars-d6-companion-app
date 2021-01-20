@@ -52,7 +52,9 @@ class App extends React.Component {
       mortallyWoundedConsumed: 0,
       currentStatus: '',
       damageTaken: 0,
-      // preventDoubleTap: true,
+      preventDoubleTap: true,
+      prone: false,
+      statusLevel: 0
     };
   }
 
@@ -81,34 +83,36 @@ class App extends React.Component {
     }
   }
   resetAll() {
-    // alert();
-    this.setState({
-      stunnedConsumed: 0,
-      woundedConsumed: 0,
-      incapacitatedConsumed: 0,
-      mortallyWoundedConsumed: 0,
-    });
+    if (window.confirm('Are you sure you want to reset your health status? (previous state cannot be retrieved yet)' )) {
+      this.setState({
+        stunnedConsumed: 0,
+        woundedConsumed: 0,
+        incapacitatedConsumed: 0,
+        mortallyWoundedConsumed: 0,
+        currentStatus: '',
+        prone: false,
+        statusLevel: 0,
+      });
+    } 
   }
 
   updateHealthStatus() {
-
     this.setState({
       currentStatus: '',
     })
   }
 
   handleChange(ev) {
-    // console.log(ev.target.valueAsNumber);
     this.setState({
       damageTaken: ev.target.valueAsNumber,
-      // preventDoubleTap: false,
+      preventDoubleTap: false,
     })
   }
 
   takeDamage() {
-    // if (this.state.preventDoubleTap) {
-    //   return;
-    // }
+    if (this.state.preventDoubleTap) {
+      return;
+    }
 
 // STUNNED
     if (this.state.damageTaken < 4) {
@@ -116,6 +120,8 @@ class App extends React.Component {
         && this.state.woundedConsumed < 3)  {
           const woundedDamge = this.state.woundedConsumed + 1;
           this.setState({ 
+            prone: true,
+            statusLevel: 1,
             stunnedConsumed: this.state.stunnedConsumed + 1,
             woundedConsumed: woundedDamge
           })
@@ -130,6 +136,8 @@ class App extends React.Component {
           const incapacitatedDamage = this.state.incapacitatedConsumed + 1;
           const woundedDamge = this.state.woundedConsumed + 1;
           this.setState({
+            prone: true,
+            statusLevel: 2,
             stunnedConsumed: this.state.stunnedMax,
             woundedConsumed: woundedDamge,
             incapacitatedConsumed: incapacitatedDamage
@@ -137,6 +145,8 @@ class App extends React.Component {
       } else if (this.state.woundedConsumed < 3) {
         const woundedDamge = this.state.woundedConsumed + 1;
         this.setState({ 
+          prone: true,
+          statusLevel: 1,
           stunnedConsumed: this.state.stunnedMax,
           woundedConsumed: woundedDamge 
         })
@@ -148,6 +158,8 @@ class App extends React.Component {
         && this.state.mortallyWoundedConsumed < 2) {
           const mortallyWoundedDamage = this.state.mortallyWoundedConsumed + 1;
           this.setState({
+            prone: true,
+            statusLevel: 3,
             stunnedConsumed: this.state.stunnedMax,
             woundedConsumed: 3,
             incapacitatedConsumed: 2,
@@ -156,6 +168,8 @@ class App extends React.Component {
       } else if (this.state.incapacitatedConsumed < 2) {
         const incapacitatedDamage = this.state.incapacitatedConsumed + 1;
         this.setState({ 
+          prone: true,
+          statusLevel: 2,
           stunnedConsumed: this.state.stunnedMax,
           woundedConsumed: 3,
           incapacitatedConsumed: incapacitatedDamage 
@@ -166,6 +180,8 @@ class App extends React.Component {
     } else if (this.state.damageTaken < 16) {
       if (this.state.mortallyWoundedConsumed + 1 === 2) {
         this.setState({
+          prone: true,
+          statusLevel: 0,
           stunnedConsumed: this.state.stunnedMax,
           woundedConsumed: 3,
           incapacitatedConsumed: 2,
@@ -174,6 +190,8 @@ class App extends React.Component {
       } else if (this.state.mortallyWoundedConsumed < 2) {
         const mortallyWoundedDamage = this.state.mortallyWoundedConsumed + 1;
         this.setState({ 
+          prone: true,
+          statusLevel: 3,
           stunnedConsumed: this.state.stunnedMax,
           woundedConsumed: 3,
           incapacitatedConsumed: 2,
@@ -185,6 +203,7 @@ class App extends React.Component {
     } else {
       this.setState({
         stunnedConsumed: this.state.stunnedMax,
+        statusLevel: 0,
         woundedConsumed: 3,
         incapacitatedConsumed: 2,
         mortallyWoundedConsumed: 2
@@ -192,12 +211,27 @@ class App extends React.Component {
     }
     this.setState({ 
       damageTaken: 0,
-      // preventDoubleTap: true,
+      preventDoubleTap: true,
     })
-    // console.log(this.state.stunnedConsumed)
   }
 
   render() {
+    let statusInformation  = [
+      [
+        'cannot take action until next round',
+        `-${this.state.woundedConsumed}D to skill and attribute rolls until healed`
+      ],
+      [
+        'knocked unconscious for 10D minutes',
+        'cannot do anything until healed'
+      ],
+      [
+        'cannot do anything until healed',
+        'at the end of each round roll 2D. If the result < number of round. Being mortally wounded Character dies'
+      ],
+    ];
+
+    console.log(this.state.statusLevel)
 
     return (
       <div className="app">
@@ -218,9 +252,6 @@ class App extends React.Component {
               Reset
             </Button>
           </Flex>
-          {/* @TODO: health indicator */}
-          {/* <HealthIndicator chunk={[this.state.stunnedMax,3,2,2]}>
-          </HealthIndicator> */}
           <br/>
           <HealthChunk 
             chunkType={'stunned'}
@@ -272,7 +303,15 @@ class App extends React.Component {
           </DamageIndicator>
         </Container>
         <Container id={'state-information'}>
-          
+          {this.state.prone && 
+            <h4>Prone</h4>
+          }
+          {this.state.statusLevel > 0 &&  
+            <ul>
+              <li>{statusInformation[this.state.statusLevel - 1][0]}</li>
+              <li>{statusInformation[this.state.statusLevel - 1][1]}</li>
+            </ul>
+          }
         </Container>
       </div>
     );
