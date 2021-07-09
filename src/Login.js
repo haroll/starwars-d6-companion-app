@@ -45,6 +45,8 @@ const Login = props => {
           id="player-str"
           label="Player STR"
           size="8"
+	  min="0"
+	  max="30"
           minlength="1"
           maxlength="2"
           type="number"
