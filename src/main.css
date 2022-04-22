@@ -22,6 +22,11 @@ body {
   color: #fff;
 }
 
+.default {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: rgba(255,255,255,.8);
+}
+
 /* body::after{
   content:'';
   position: absolute;
@@ -37,6 +42,8 @@ body {
   background-size: .3rem .3rem;
   mix-blend-mode: multiply;
   opacity: .6;
+
+  pointer-events: none;;
 } */
 
 h1,h2,h3,h4,h5,h6 {
@@ -63,8 +70,53 @@ h6 {
   font-size: 1.3rem;
 }
 
-.app {
-  margin: 1rem;
+p {
+  font-size: 1.6rem;
+}
+
+#root {
+  height: calc(100vh - 4.4rem);
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  /* margin: 1rem; */
+}
+
+.centered-container {
+  display: flex;
+  justify-content: center;;
+  height: 100%;
+  width: 100%;
+}
+
+.centered-container > div {
+  margin: 0 1.6rem;
+  box-sizing: border-box;
+}
+
+.scroll {
+  overflow-y: scroll;
+}
+
+@media screen and (min-device-width: 480px) {
+  #root { height: 100vh; }
+
+  .centered-container {
+    display: flex;
+    width: 37.5rem;
+    height: 90rem;
+    justify-content: center;
+    align-content: center;
+  }
+  
+  .centered-container > div {
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
 }
 
 .username  {
@@ -97,4 +149,77 @@ a {
 
 a:active, a:visited {
   color: inherit;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background: transparent;
+  height: 6rem;
+}
+
+input[type="range"]::-moz-range-track {
+  background: transparent;
+  height: 6rem;
+}
+
+input[type="range"]::-moz-range-thumb {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+
+  background-color: yellow;
+  border: none;
+  border-radius: 0;
+  border: none;
+  border-radius: 0;
+  background-color: yellow;
+  background-color: yellow;
+  height: 6rem;
+  width: 1rem;
+  margin-top: -6rem;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+
+  user-select: none;
+
+  border: none;
+  border-radius: 0;
+  border: none;
+  border-radius: 0;
+  background-color: yellow;
+  background-color: yellow;
+  height: 6rem;
+  width: 6rem;
+  margin-top: 0rem;
+}
+
+#damage-progress > div {
+  position: relative;
+}
+
+.bg-deco {
+  position: fixed;
+  z-index: 1;
+  background-size: 4rem 4rem;
+}
+
+.bg-grid {
+  top: -1rem;
+  right: -1rem;
+  bottom: -1rem;
+  left: -1rem;
+  background-image:
+  linear-gradient(to right, rgba(0, 242, 255, 0.1) .1rem, transparent .1rem),
+  linear-gradient(to bottom, rgba(0,242,255,.1)  .1rem, transparent .1rem);
+}
+
+.bg-dot {
+  top: -3rem;
+  right: -3rem;
+  bottom: -3rem;
+  left: -3rem;
+  background-image: radial-gradient(circle, rgba(0,242,255,.25) .1rem, rgba(255, 255, 255, 0) .1rem);
 }

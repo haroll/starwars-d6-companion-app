@@ -1,33 +1,24 @@
-import React from 'react';
-import styled from 'styled-components';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-import Login from './Login';
-import UserDashboard from './UserDashboard';
+import { StorageAvailable } from './Storage';
 
 const App = props => {
+  let goto = useNavigate();
 
-  return (
-    <Router>
-      <div>
+  useEffect(() => {
+    if (StorageAvailable('localStorage')) {
+      if (!localStorage.getItem('pc_nbr')) {
+        goto('/config')
+      } else
+        goto('/pc')
+    } else {
+      console.log('fuck')
+    }
 
-      </div>
-      <Switch>
-        <Route path="/User">
-          <UserDashboard />
-        </Route>
-        {/* <Route path="/Login"> */}
-        <Route path="/">
-          <Login />
-        </Route>
-      </Switch>
-    </Router>
-  );
+  }, [])
+
+  return <Outlet />;
 }
 
 export default App;

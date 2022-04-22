@@ -14,7 +14,6 @@ const GraphContainer = styled.div`
   & > .graph {
     display: flex;
     direction: column;
-    
     width:  100%;
     height: 6rem;
     
@@ -24,55 +23,34 @@ const GraphContainer = styled.div`
       align-items: flex-end;
       height: 100%;
       padding: 0 .2rem;
-      // border-bottom: .1rem solid #3a9de2;
+      border-left: .1rem solid #3a9de2;
     }
 
     & > .stunned { 
       flex-grow: 3;
-      // margin-right: .1rem;
+      border-left: 0;
       
-      & > ${GraphBarDamageIndicator} {
-        height: 40%;
-        opacity: 0.4;
-      }
+      & > ${GraphBarDamageIndicator} { height: 40%; }
     }
     & > .wounded { 
       flex-grow: 5; 
-      // margin-right: .1rem;
-      border-left: .1rem solid #3a9de2;
       
-      & > ${GraphBarDamageIndicator} {
-        height: 55%;
-        opacity: 0.55;
-      }
+      & > ${GraphBarDamageIndicator} { height: 55%; }
     }
     & > .incapacitated {
       flex-grow: 4;
-      // margin-right: .1rem;
-      border-left: .1rem solid #3a9de2;
       
-      & > ${GraphBarDamageIndicator} {
-        height: 70%;
-        opacity: .7;
-      }
+      & > ${GraphBarDamageIndicator} { height: 70%; }
     }
     & > .mortally-wounded {
       flex-grow: 3;
-      // margin-right: .1rem;
-      border-left: .1rem solid #3a9de2;
       
-      & > ${GraphBarDamageIndicator} {
-        height: 85%;
-        opacity: 0.85;
-      }
+      & > ${GraphBarDamageIndicator} { height: 85%; }
     }
     & > .dead {
       flex-grow: 1;
-      border-left: .1rem solid #3a9de2;
       
-      & > ${GraphBarDamageIndicator} {
-        height: 100%;
-      }
+      & > ${GraphBarDamageIndicator} { height: 100%; }
     }
   }
   
@@ -113,8 +91,6 @@ const DamageRanger = props => {
           <GraphBarDamageIndicator style={{ opacity: (props.damage - 16 >= 0) ? 1 : 0 }}/>
         </div>
       </div>
-      {/* <div className="caption">
-      </div> */}
     </GraphContainer>
   )
 }

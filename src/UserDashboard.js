@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { 
+  Outlet,
+  useLocation,
+} from 'react-router-dom';
 import styled from 'styled-components';
 
 import Container from './components/Container';
 import DamageRanger from './components/DamageRanger';
 import HealthChunk  from './components/HealthChunk';
-// import HealthIndicator  from './components/HealthIndicator';
+import { getPC, updatePC } from './Storage';
 
 const Flex = styled.div`
   display: flex;
@@ -21,6 +25,17 @@ const Button = styled.button`
   border: .2rem solid #26b;
   border-radius: .6rem;
   color: #26b;
+
+  &:disabled {
+    opacity: .3;
+    
+    &:hover { cursor: not-allowed; }
+  }
+
+  &:hover {
+    color: #ffe919;
+    border-color: #ffe919;
+  }
 `;
 
 const DamageIndicator = styled.div`
@@ -36,211 +51,221 @@ const DamageIndicator = styled.div`
   & > h3 { color: red; }
 `;
 
-class UserDashboard extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      // playerName: '',
-      // playerStrength: 0,
-      stunnedMax: 4,
-      // stunnedMax: this.props.strength,
-      // stunnedConsumed: 3,
-      stunnedConsumed: 0,
-      // woundedConsumed: 1,
-      woundedConsumed: 0,
-      // incapacitatedConsumed: 1,
-      incapacitatedConsumed: 0,
-      // mortallyWoundedConsumed: 1,
-      mortallyWoundedConsumed: 0,
-      currentStatus: '',
-      damageTaken: 0,
-      preventDoubleTap: true,
-      prone: false,
-      statusLevel: 0
-    };
+const Dashboard = () => {
+  const [pcID, setPCID] = useState(-1);
+  const [name, setName] = useState('');
+  const [maxStun, setMaxStun] = useState(4);
+  const [stunChunkConsumed, setStunChunkConsumed] = useState(0);
+  const [woundChunkConsumed, setWoundChunkConsumed] = useState(0);
+  const [incapacitatedChunkConsumed, setIncapacitatedChunkConsumed] = useState(0);
+  const [mortallyWoundedChunkConsumed, setMortallyWoundedChunkConsumed] = useState(0);
+  const [currentStatus, setCurrentStatus] = useState('Everything alright');
+  const [damageTaken, setDamageTaken] = useState(0);
+  const [preventDoubleTape, setPreventDoubleTape] = useState(true);
+  const [prone, setProne] = useState(false);
+  const [statusLevel, setStatusLevel] = useState(0);
+
+  let loc = useLocation();
+  let res = getPC(loc.search.substring(loc.search.lastIndexOf('?') + 1));
+  console.log(res);
+
+  useEffect(() => {
+    setPCID(res.id);
+    setName(res.name);
+    setMaxStun(res.str);
+    setStunChunkConsumed(res.stun);
+    setWoundChunkConsumed(res.wound);
+    setIncapacitatedChunkConsumed(res.incapacited);
+    setMortallyWoundedChunkConsumed(res.mortally);
+    setProne(res.prone);
+    setStatusLevel(res.statuslvl);
+  }, []);
+
+  const removeOneStunned = () => {
+    if (stunChunkConsumed > 0 && statusLevel === 0) {
+      let tmpStunChunk = stunChunkConsumed - 1;
+      setStunChunkConsumed(tmpStunChunk)
+      setStatusLevel(tmpStunChunk === 0 ? statusLevel - 1 : statusLevel)
+    }
   }
 
-  removeOneStunned() {
-    if (this.state.stunnedConsumed > 0) {
-      let tmpStunned = this.state.stunnedConsumed - 1;
-      this.setState({ stunnedConsumed: tmpStunned });
+  const removeOneWounded = () => {
+    if (woundChunkConsumed > 0 && statusLevel === 1) {
+      let tmpWoundChunk = woundChunkConsumed - 1;
+      setWoundChunkConsumed(tmpWoundChunk)
+      setStatusLevel(tmpWoundChunk === 0 ? statusLevel - 1 : statusLevel);
+      if (statusLevel - 1 === 0)
+        setCurrentStatus('Everything alright')
     }
   }
-  removeOneWounded() {
-    if (this.state.woundedConsumed > 0) {
-      let tmpWounded = this.state.woundedConsumed - 1;
-      this.setState({ woundedConsumed: tmpWounded });
+
+  const removeOneIncapacitated = () => {
+    if (incapacitatedChunkConsumed > 0 && statusLevel === 2) {
+      let tmpIncapacitatedChunk = incapacitatedChunkConsumed - 1;
+      setIncapacitatedChunkConsumed(tmpIncapacitatedChunk);
+      setStatusLevel(tmpIncapacitatedChunk === 0 ? statusLevel - 1 : statusLevel);
     }
   }
-  removeOneIncapacitated() {
-    if (this.state.incapacitatedConsumed > 0) {
-      let tmpIncapacitated = this.state.incapacitatedConsumed - 1;
-      this.setState({ incapacitatedConsumed: tmpIncapacitated });
+  
+  const removeOneMortallyWounded = () => {
+    if (mortallyWoundedChunkConsumed > 0 && statusLevel === 3) {
+      let tmpMortallyWoundedChunk = mortallyWoundedChunkConsumed - 1;
+      setMortallyWoundedChunkConsumed(tmpMortallyWoundedChunk);
+      setStatusLevel(tmpMortallyWoundedChunk === 0 ? statusLevel - 1 : statusLevel);
     }
   }
-  removeOneMortallyWounded() {
-    if (this.state.mortallyWoundedConsumed > 0) {
-      let tmpMortallyWounded = this.state.mortallyWoundedConsumed - 1;
-      this.setState({ mortallyWoundedConsumed: tmpMortallyWounded });
-    }
-  }
-  resetAll() {
+
+  const resetAll = () => {
     if (window.confirm('Are you sure you want to reset your health status? (previous state cannot be retrieved yet)' )) {
-      this.setState({
-        stunnedConsumed: 0,
-        woundedConsumed: 0,
-        incapacitatedConsumed: 0,
-        mortallyWoundedConsumed: 0,
-        currentStatus: '',
-        prone: false,
-        statusLevel: 0,
-      });
+      setStunChunkConsumed(0);
+      setWoundChunkConsumed(0);
+      setIncapacitatedChunkConsumed(0);
+      setMortallyWoundedChunkConsumed(0);
+      setProne(false);
+      setStatusLevel(0);
     } 
   }
 
-  updateHealthStatus() {
-    this.setState({
-      currentStatus: '',
-    })
+  const handleChange = (ev) => {
+    setDamageTaken(ev.target.valueAsNumber);
+    setPreventDoubleTape(false);
   }
 
-  handleChange(ev) {
-    this.setState({
-      damageTaken: ev.target.valueAsNumber,
-      preventDoubleTap: false,
-    })
-  }
-
-  takeDamage() {
-    if (this.state.preventDoubleTap) {
+  const takeDamage = () => {
+    if (preventDoubleTape) {
       return;
     }
 
-// STUNNED
-    if (this.state.damageTaken < 4) {
-      if (this.state.stunnedConsumed + 1 === this.state.stunnedMax 
-        && this.state.woundedConsumed < 3)  {
-          const woundedDamge = this.state.woundedConsumed + 1;
-          this.setState({ 
-            prone: true,
-            statusLevel: 1,
-            stunnedConsumed: this.state.stunnedConsumed + 1,
-            woundedConsumed: woundedDamge
-          })
-      } else if (this.state.stunnedConsumed < this.state.stunnedMax) {
-        this.setState({ stunnedConsumed: this.state.stunnedConsumed + 1 })  
+    // STUNNED
+    if (damageTaken < 4) {
+      if (stunChunkConsumed + 1 === maxStun && woundChunkConsumed < 3) {
+          const woundChunkDamage = woundChunkConsumed + 1;
+          setProne(true);
+          setStatusLevel(1);
+          setCurrentStatus('You\'re prone');
+          setStunChunkConsumed(stunChunkConsumed + 1)
+          setWoundChunkConsumed(woundChunkDamage)
+      } else if (stunChunkConsumed < maxStun) {
+        setStunChunkConsumed(stunChunkConsumed + 1);
       }
 
-// WOUNDED
-    } else if (this.state.damageTaken < 9) {
-      if (this.state.woundedConsumed + 1 === 3
-        && this.state.incapacitatedConsumed < 2) {
-          const incapacitatedDamage = this.state.incapacitatedConsumed + 1;
-          const woundedDamge = this.state.woundedConsumed + 1;
-          this.setState({
-            prone: true,
-            statusLevel: 2,
-            stunnedConsumed: this.state.stunnedMax,
-            woundedConsumed: woundedDamge,
-            incapacitatedConsumed: incapacitatedDamage
-          })
-      } else if (this.state.woundedConsumed < 3) {
-        const woundedDamge = this.state.woundedConsumed + 1;
-        this.setState({ 
-          prone: true,
-          statusLevel: 1,
-          stunnedConsumed: this.state.stunnedMax,
-          woundedConsumed: woundedDamge 
-        })
+    // WOUNDED
+    } else if (damageTaken < 9) {
+      if (woundChunkConsumed + 1 === 3 && incapacitatedChunkConsumed < 2) {
+          const incapacitatedChunkDamage = incapacitatedChunkConsumed + 1;
+          const woundChunkDamage = woundChunkConsumed + 1;
+          setProne(true);
+          setStatusLevel(2);
+          setCurrentStatus('You\'re prone');
+          setStunChunkConsumed(maxStun);
+          setWoundChunkConsumed(woundChunkDamage);
+          setIncapacitatedChunkConsumed(incapacitatedChunkDamage);
+      } else if (woundChunkConsumed < 3) {
+        const woundChunkDamage = woundChunkConsumed + 1;
+        setProne(true);
+        setStatusLevel(1);
+        setCurrentStatus('You\'re prone');
+        setStunChunkConsumed(maxStun);
+        setWoundChunkConsumed(woundChunkDamage);
       }
 
-// INCAPACITATED
-    } else if (this.state.damageTaken < 13) {
-      if (this.state.incapacitatedConsumed + 1 === 2
-        && this.state.mortallyWoundedConsumed < 2) {
-          const mortallyWoundedDamage = this.state.mortallyWoundedConsumed + 1;
-          this.setState({
-            prone: true,
-            statusLevel: 3,
-            stunnedConsumed: this.state.stunnedMax,
-            woundedConsumed: 3,
-            incapacitatedConsumed: 2,
-            mortallyWoundedConsumed: mortallyWoundedDamage
-          })
-      } else if (this.state.incapacitatedConsumed < 2) {
-        const incapacitatedDamage = this.state.incapacitatedConsumed + 1;
-        this.setState({ 
-          prone: true,
-          statusLevel: 2,
-          stunnedConsumed: this.state.stunnedMax,
-          woundedConsumed: 3,
-          incapacitatedConsumed: incapacitatedDamage 
-        })
+    // INCAPACITATED
+    } else if (damageTaken < 13) {
+      if (incapacitatedChunkConsumed + 1 === 2 && mortallyWoundedChunkConsumed < 2) {
+          const mortallyWoundedChunkDamage = mortallyWoundedChunkConsumed + 1;
+          setProne(true);
+          setStatusLevel(3);
+          setCurrentStatus('You\'re prone');
+          setStunChunkConsumed(maxStun);
+          setWoundChunkConsumed(3);
+          setIncapacitatedChunkConsumed(2);
+          setMortallyWoundedChunkConsumed(mortallyWoundedChunkDamage);
+      } else if (incapacitatedChunkConsumed< 2) {
+        const incapacitatedChunkDamage = incapacitatedChunkConsumed + 1;
+        setProne(true);
+        setStatusLevel(2);
+        setCurrentStatus('You\'re prone');
+        setStunChunkConsumed(maxStun);
+        setWoundChunkConsumed(3);
+        setIncapacitatedChunkConsumed(incapacitatedChunkDamage);
       }
 
-// MORTALLY WOUNDED
-    } else if (this.state.damageTaken < 16) {
-      if (this.state.mortallyWoundedConsumed + 1 === 2) {
-        this.setState({
-          prone: true,
-          statusLevel: 0,
-          stunnedConsumed: this.state.stunnedMax,
-          woundedConsumed: 3,
-          incapacitatedConsumed: 2,
-          mortallyWoundedConsumed: 2
-        })  
-      } else if (this.state.mortallyWoundedConsumed < 2) {
-        const mortallyWoundedDamage = this.state.mortallyWoundedConsumed + 1;
-        this.setState({ 
-          prone: true,
-          statusLevel: 3,
-          stunnedConsumed: this.state.stunnedMax,
-          woundedConsumed: 3,
-          incapacitatedConsumed: 2,
-          mortallyWoundedConsumed:  mortallyWoundedDamage 
-        })
+    // MORTALLY WOUNDED
+    } else if (damageTaken < 16) {
+      if (mortallyWoundedChunkConsumed + 1 === 2) {
+        setProne(true);
+        setStatusLevel(4);
+        setCurrentStatus('You die');
+        setStunChunkConsumed(maxStun);
+        setWoundChunkConsumed(3);
+        setIncapacitatedChunkConsumed(2);
+        setMortallyWoundedChunkConsumed(2);
+      } else if (mortallyWoundedChunkConsumed < 2) {
+        const mortallyWoundedChunkDamage = mortallyWoundedChunkConsumed + 1;
+        setProne(true);
+        setStatusLevel(3);
+        setCurrentStatus('You\'re prone');
+        setStunChunkConsumed(maxStun);
+        setWoundChunkConsumed(3);
+        setIncapacitatedChunkConsumed(2);
+        setMortallyWoundedChunkConsumed(mortallyWoundedChunkDamage);
       }
       
-// SUPER DEAD
+    // SUPER DEAD
     } else {
-      this.setState({
-        stunnedConsumed: this.state.stunnedMax,
-        statusLevel: 0,
-        woundedConsumed: 3,
-        incapacitatedConsumed: 2,
-        mortallyWoundedConsumed: 2
-      })
+      setStunChunkConsumed(maxStun);
+      setStatusLevel(4);
+      setCurrentStatus('You die');
+      setWoundChunkConsumed(3);
+      setIncapacitatedChunkConsumed(2);
+      setMortallyWoundedChunkConsumed(2);
     }
-    this.setState({ 
-      damageTaken: 0,
-      preventDoubleTap: true,
-    })
+    setDamageTaken(0);
+    setPreventDoubleTape(true);
+    const tmpData = [
+      {key: 'stun', value: stunChunkConsumed},
+      {key: 'wound', value: woundChunkConsumed},
+      {key: 'incapacited', value: incapacitatedChunkConsumed},
+      {key: 'mortally', value: mortallyWoundedChunkConsumed},
+      {key: 'prone', value: prone},
+      {key: 'statuslvl', value: statusLevel},
+    ];
+    console.log('tmpData:[',pcID,']', tmpData);
+    updatePC(
+      pcID, 
+      tmpData
+    );
+    console.log(getPC(loc.search.substring(loc.search.lastIndexOf('?') + 1)));
+
   }
 
-  render() {
-    let statusInformation  = [
-      [
-        'cannot take action until next round',
-        `-${this.state.woundedConsumed}D to skill and attribute rolls until healed`
-      ],
-      [
-        'knocked unconscious for 10D minutes',
-        'cannot do anything until healed'
-      ],
-      [
-        'cannot do anything until healed',
-        'at the end of each round roll 2D. If the result < number of round. Being mortally wounded Character dies'
-      ],
-    ];
+  let statusInformation  = [
+    [
+      'cannot take action until next round',
+      `-${woundChunkConsumed}D to skill and attribute rolls until healed`
+    ],
+    [
+      'knocked unconscious for 10D minutes',
+      'cannot do anything until healed'
+    ],
+    [
+      'cannot do anything until healed',
+      'at the end of each round roll 2D. If the result < number of round. Being mortally wounded Character dies'
+    ],
+    [
+      'RIP',
+      'You\'ll be remembered'
+    ]
+  ];
 
-    console.log(this.state.statusLevel)
-
-    return (
-      <div className="app">
-
-        <h4 className="username aurebesh-droid">
-          Username and lastname
-        </h4>
+  return (
+    <div className='centered-container'>
+      <div>
+        <Outlet />
+        <h1 className="username aurebesh-droid">
+          {name}
+        </h1>
+        <h4 className='username'>{name}</h4>
         <Container id={'health-status-container'}>
           <Flex>
             <div>
@@ -251,74 +276,83 @@ class UserDashboard extends React.Component {
                 Health Status
               </h5>
             </div>
-            <Button onClick={() => this.resetAll()}>
+            <Button 
+              onClick={() => resetAll()}
+              disabled={statusLevel === 0 ? true : false}  
+            >
               Reset
             </Button>
           </Flex>
           <br/>
           <HealthChunk 
             chunkType={'stunned'}
-            chunkNumber={this.state.stunnedMax} 
-            chunkConsumed={this.state.stunnedConsumed}
-            onClick={() => this.removeOneStunned()}
+            chunkNumber={maxStun} 
+            chunkConsumed={stunChunkConsumed}
+            onClick={() => removeOneStunned()}
           />
           <HealthChunk 
             chunkType={'wounded'}
             chunkNumber={3} 
-            chunkConsumed={this.state.woundedConsumed}
-            onClick={() => this.removeOneWounded()}
+            chunkConsumed={woundChunkConsumed}
+            onClick={() => removeOneWounded()}
           />
           <HealthChunk 
             chunkType={'incapacitated'}
             chunkNumber={2} 
-            chunkConsumed={this.state.incapacitatedConsumed}
-            onClick={() => this.removeOneIncapacitated()}
+            chunkConsumed={incapacitatedChunkConsumed}
+            onClick={() => removeOneIncapacitated()}
           />
           <HealthChunk 
             chunkType={'mortally wounded'}
             chunkNumber={2} 
-            chunkConsumed={this.state.mortallyWoundedConsumed}
-            onClick={() => this.removeOneMortallyWounded()}
+            chunkConsumed={mortallyWoundedChunkConsumed}
+            onClick={() => removeOneMortallyWounded()}
           />
         </Container>
         <Container id={'damage-progress'}>
           <DamageRanger 
-            damage={this.state.damageTaken}
+            damage={damageTaken}
           />
           <input 
-            onChange={(e) => this.handleChange(e)} 
+            onChange={(e) => handleChange(e)} 
             style={{
               position: 'absolute',
-              top: '6rem',
+              top: 0,
+              height: '100%',
               width: 'calc(100% - 4rem)',
-              opacity: '0'
+              opacity: 0
             }}
             type={'range'}
             min={'1'}
             max={'16'}
             step={'1'}
-            value={this.state.damageTaken}
+            value={damageTaken}
           />
-          <DamageIndicator onClick={() => this.takeDamage()} >
+          <DamageIndicator 
+          onClick={() => takeDamage()} 
+          >
             <h3>
-              +{this.state.damageTaken}
+              +{damageTaken}
             </h3>
           </DamageIndicator>
         </Container>
-        {this.state.prone && 
-          <Container id={'state-information'}>
-            <h4>Prone</h4>
-            {this.state.statusLevel > 0 &&  
-              <ul>
-                <li>{statusInformation[this.state.statusLevel - 1][0]}</li>
-                <li>{statusInformation[this.state.statusLevel - 1][1]}</li>
-              </ul>
-            }
-          </Container>
-        }
+        <Container id={'state-information'}>
+          <h4>{currentStatus}</h4>
+          {statusLevel > 0 &&  
+            <ul>
+              <li>{statusInformation[statusLevel - 1][0]}</li>
+              <li>{statusInformation[statusLevel - 1][1]}</li>
+            </ul>
+          }{ statusLevel === 0 &&
+            <ul style={{ opacity: 0 }}>
+              <li> </li>
+              <li> </li>
+            </ul>
+          }
+        </Container>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
-export default UserDashboard;
+export default Dashboard;

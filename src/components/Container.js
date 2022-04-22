@@ -1,6 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
 
+const ObsidianContainerStyle = styled.ul`
+  position: relative;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+
+  background-color: rgba(0,0,0,.5);
+  border-top: .1rem solid cyan;
+  border-bottom: .1rem solid cyan;
+`;
+
 const NeonContainer = styled.div`
   position: relative;
   margin-top: 1rem;
@@ -15,6 +28,23 @@ const NeonContainer = styled.div`
   }
 `;
 
+const GridContainer = styled.div`
+//   background-image:
+//     linear-gradient(to right, #171730 .1rem, transparent .1rem),
+//     linear-gradient(to bottom, #171730  .1rem, transparent .1rem),
+//     radial-gradient(circle, purple .1rem, rgba(255, 255, 255, 0) .1rem);
+// }
+`;
+
+
+const ObsidianContainer = props => {
+  return (
+    <ObsidianContainerStyle {...props}>
+      {props.children}
+    </ObsidianContainerStyle>
+  )
+}
+
 const Container = props => {
   return (
     <NeonContainer {...props}>
@@ -25,4 +55,4 @@ const Container = props => {
   )
 }
 
-export default Container;
+export { Container as default, GridContainer, ObsidianContainer };
