@@ -7,6 +7,10 @@ const ButtonBase = styled.button`
   border-radius: .6rem;
   font-size: 1.6rem;
   
+  &:hover {
+    cursor: pointer;
+  }
+
   & > a {
     display: block;
     width: 100%;
@@ -36,6 +40,26 @@ const GhostButton = styled(ButtonBase)`
     color: var(--yellow);
     border-color: var(--yellow);
     background-color: rgba(0,0,0,.25);
+  }
+  
+  &.red {
+    color: var(--red);
+    border-color: var(--red);
+    background-color: rgba(255,0,0,.25);
+    
+    &:hover {
+      background-color: rgba(255,0,0,.5);
+    }
+
+    &.invert {
+      color: rgba(0,0,0,.5);
+      background-color: var(--red);
+
+      &:hover {
+        border-color: transparent;
+        background-color: rgba(255,0,0,.85);
+      }
+    }
   }
 `
 

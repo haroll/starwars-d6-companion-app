@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
+  Link,
   Outlet,
   useLocation,
 } from 'react-router-dom';
@@ -8,6 +9,7 @@ import styled from 'styled-components';
 import Container from './components/Container';
 import DamageRanger from './components/DamageRanger';
 import HealthChunk  from './components/HealthChunk';
+import { GhostButton } from './components/Button';
 import { getPC, updatePC } from './Storage';
 
 const Flex = styled.div`
@@ -271,10 +273,17 @@ const Dashboard = () => {
     <div className='centered-container'>
       <div>
         <Outlet />
-        <h1 className="username aurebesh-droid">
-          {name}
-        </h1>
-        <h4 className='username'>{name}</h4>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <h1>
+            <Link to={`/pc`}>◁</Link>
+          </h1>
+          <div>
+            <h1 className="username aurebesh-droid">
+              {name}
+            </h1>
+            <h4 className='username'>{name}</h4>
+          </div>
+        </div>
         <Container id={'health-status-container'}>
           <Flex>
             <div>
@@ -338,13 +347,24 @@ const Dashboard = () => {
             value={damageTaken}
           />
           <DamageIndicator 
-          onClick={() => takeDamage()} 
+            onClick={() => takeDamage()} 
           >
             <h3>
               +{damageTaken}
             </h3>
           </DamageIndicator>
         </Container>
+        <GhostButton
+          style={{ marginTop: '1rem' }}
+          className={`red ${damageTaken > 0 ? 'invert' : ''}`}
+          onClick={() => takeDamage()}
+        >
+          {(damageTaken)
+            ? `Take ${damageTaken} damage point${ damageTaken > 1 ? 's' : '' }` 
+            : 'No damage amount selected'
+          }
+          
+        </GhostButton>
         <Container id={'state-information'}>
           <h4>{currentStatus}</h4>
           {statusLevel > 0 &&  

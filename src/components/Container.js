@@ -25,7 +25,7 @@ const NeonContainer = styled.div`
   & > div {
     padding: 1.6rem;
     border-radius: .8rem;
-    background-color: (--bg-color);
+    background-color: var(--bg-color);
   }
 `;
 
