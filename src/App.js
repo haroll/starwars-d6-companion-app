@@ -5,16 +5,21 @@ import { StorageAvailable } from './Storage';
 
 const App = props => {
   let goto = useNavigate();
+  let x = useLocation();
 
   useEffect(() => {
+    console.log(x);
     if (StorageAvailable('localStorage')) {
       if (!localStorage.getItem('pc_nbr')) {
         goto('/config')
-      } else
-        goto('/pc')
-    } else {
-      console.log('fuck')
-    }
+      }
+      if (x.pathname === '/') {
+        goto('/pc');
+      }
+    } 
+    // else {
+    //   console.log('fuck')
+    // }
 
   }, [])
 

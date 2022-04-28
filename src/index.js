@@ -8,7 +8,7 @@ import {
 
 import App from './App';
 import Dashboard from './UserDashboard';
-import UserInformation from './UserInformation';
+import Register from './Register';
 import Configuration from './Configuration';
 import PickPC from './PickPc';
 
@@ -18,12 +18,12 @@ ReactDOM.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<App />}>
-        <Route index path="/pc" element={<PickPC />} />
-        <Route path="/u" >
+        <Route path="pc" element={<PickPC />} />
+        <Route path="u" >
           <Route path=":name" element={<Dashboard />} />
         </Route>
-        <Route path="/config" element={<Configuration />} />
-        <Route path="/register" element={<UserInformation />} />
+        <Route path="config" element={<Configuration />} />
+        <Route path="register" element={<Register />} />
         <Route 
           path="*"
           element={

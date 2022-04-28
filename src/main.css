@@ -1,3 +1,19 @@
+:root {
+  --bg-color: #000;
+
+  --red: #ea2d0f;
+  --purple: #7e84e6;
+  --blue: #26b;
+  --cyan: cyan;
+  --yellow: #ffe919;
+
+  --title-color: #f9e1f2;
+  --text-important: rgba(255,255,255,1);
+  --text-default: rgba(255,255,255,.87);
+  --text-secondary: rgba(255,255,255,.6);
+  --text-disabled: rgba(255,255,255,.3);
+}
+
 html {
   font-size: 10px;
 }
@@ -10,13 +26,14 @@ html {
   font-family: 'Conthrax';
   src: local('conthrax-sb'), url('./fonts/conthrax-sb.woff') format('woff');
 }
+
 body {
   margin: 0;
   font-family: 'Conthrax', -apple-system, BlinkMacSystemFont, 'Roboto', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background-color:  #000;
+  background-color:  var(--bg-color);
   /* background-color:  #111; */
   text-shadow: .125rem 0 rgba(255,0,0,.9), -.125rem 0 rgba(0,0,255,.9);
   color: #fff;
@@ -24,7 +41,14 @@ body {
 
 .default {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: rgba(255,255,255,.8);
+  color: var(--text-default);
+}
+
+.aurebesh-droid {
+  font-family: 'Aurebesh-Droid';
+  /* color: #f9e1f2; */
+  color: var(--purple);
+  text-shadow: .15rem 0 rgba(255,0,0,.9), -.15rem 0 rgba(0,0,255,.9), 0 0 1rem rgba(255,0,0,.5), 0 0 2rem rgba(0,0,255,.75);
 }
 
 /* body::after{
@@ -48,7 +72,7 @@ body {
 
 h1,h2,h3,h4,h5,h6 {
   margin: 0;
-  color: #7e84e6;
+  color: var(--title-color);
 }
 
 h1 {
@@ -124,18 +148,12 @@ p {
 }
 
 .danger {
-  color: #ea2d0f;
-}
-
-.aurebesh-droid {
-  font-family: 'Aurebesh-Droid';
-  color: #f9e1f2;
-  text-shadow: .15rem 0 rgba(255,0,0,.9), -.15rem 0 rgba(0,0,255,.9), 0 0 1rem rgba(255,0,0,.5), 0 0 2rem rgba(0,0,255,.75);
+  color: var(--red);
 }
 
 hr {
   border: 0;
-  border-bottom:  .1rem solid #26b;
+  border-bottom:  .1rem solid var(--blue);
 }
 
 button {
@@ -162,38 +180,30 @@ input[type="range"]::-moz-range-track {
 }
 
 input[type="range"]::-moz-range-thumb {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
-
-  background-color: yellow;
-  border: none;
-  border-radius: 0;
-  border: none;
-  border-radius: 0;
-  background-color: yellow;
-  background-color: yellow;
   height: 6rem;
   width: 1rem;
   margin-top: -6rem;
-}
+  border: none;
+  border-radius: 0;
+  background-color: var(--yellow);
 
-input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
+}
 
-  user-select: none;
-
-  border: none;
-  border-radius: 0;
-  border: none;
-  border-radius: 0;
-  background-color: yellow;
-  background-color: yellow;
+input[type="range"]::-webkit-slider-thumb {
   height: 6rem;
   width: 6rem;
   margin-top: 0rem;
+  user-select: none;
+  border: none;
+  border-radius: 0;
+  background-color: var(--yellow);
+
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
 }
 
 #damage-progress > div {

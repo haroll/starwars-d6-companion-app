@@ -22,9 +22,9 @@ const Flex = styled.div`
 
 const Button = styled.button`
   background: transparent;
-  border: .2rem solid #26b;
+  border: .2rem solid var(--blue);
   border-radius: .6rem;
-  color: #26b;
+  color: var(--blue);
 
   &:disabled {
     opacity: .3;
@@ -33,8 +33,8 @@ const Button = styled.button`
   }
 
   &:hover {
-    color: #ffe919;
-    border-color: #ffe919;
+    color: var(--yellow);
+    border-color: var(--yellow);
   }
 `;
 
@@ -50,6 +50,15 @@ const DamageIndicator = styled.div`
   background: linear-gradient(to left, #980605 0%, #800 5%, #980605 10%, #800 15%, #980605 20%, #800 25%, #980605  30%, #800 35%, #980605 40%, #800 45%, #980605 50%, #800 55%, #980605 60%, #800 65%, #980605 70%, #800  75%, #980605 80%, #800 85%, #980605 90%, #800 95%, #980605 100%);
   & > h3 { color: red; }
 `;
+
+//* TODO
+//? 1
+//  Change saving data method 
+//    `-> 1st : send to localStorgae
+//    `-> then : update states of arrow function
+//? 2
+//  Add a 'back to menu' button
+//  (state === localStorage) ? goto : update and then goto
 
 const Dashboard = () => {
   const [pcID, setPCID] = useState(-1);
@@ -79,7 +88,7 @@ const Dashboard = () => {
     setMortallyWoundedChunkConsumed(res.mortally);
     setProne(res.prone);
     setStatusLevel(res.statuslvl);
-  }, []);
+  }, [res]);
 
   const removeOneStunned = () => {
     if (stunChunkConsumed > 0 && statusLevel === 0) {

@@ -8,10 +8,11 @@ const ObsidianContainerStyle = styled.ul`
   padding: 0;
   box-sizing: border-box;
   list-style: none;
+  overflow: scroll;
 
-  background-color: rgba(0,0,0,.5);
-  border-top: .1rem solid cyan;
-  border-bottom: .1rem solid cyan;
+  background-color: rgba(0,0,0,.2);
+  border-top: .1rem solid var(--cyan);
+  border-bottom: .1rem solid var(--cyan);
 `;
 
 const NeonContainer = styled.div`
@@ -24,7 +25,7 @@ const NeonContainer = styled.div`
   & > div {
     padding: 1.6rem;
     border-radius: .8rem;
-    background-color: #000;
+    background-color: (--bg-color);
   }
 `;
 

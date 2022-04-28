@@ -4,20 +4,29 @@ import styled from 'styled-components';
 const TextInput = styled.input`
   display: block;
   padding: 1.2rem 1.6rem 1rem;
-  border: 2px solid #26b;
+  border: 2px solid var(--blue);
   border-radius: .6rem;
   background-color: transparent;
-  color: #7e84e6;
+  color: var(--purple);
   font-size: 1.6rem;
   font-family: 'Conthrax';
   outline: none;
 
   &:focus {
     outline: none;
-    border-color: #ffe919;
+    border-color: var(--yellow);
 
     ~ label {
-      color: #ffe919;
+      color: var(--yellow);
+    }
+  }
+
+  &.input-error {
+    color: var(--red);
+    border-color: var(--red);
+
+    ~ label {
+      color: var(--red);
     }
   }
 `;
@@ -26,9 +35,9 @@ const Label = styled.label`
   position: absolute;
   top: -1.1rem;
   left: 1rem;
-  background-color: black;
+  background-color: var(--bg-color);
   padding: .4rem 1rem;
-  color: #26b;
+  color: var(--blue);
   font-size: 1.2rem;
   text-shadow: none;
 `;
@@ -36,6 +45,22 @@ const Label = styled.label`
 const Group = styled.div`
   position: relative;
   display: table;
+
+  small {
+    display: inline-block;
+    margin-top: .8rem;
+    height: 1.4rem;
+    font-size: 1.4rem;
+
+    text-shadow: none;
+    color: var(--red);
+  }
+
+  .input-error ~ small:before,
+  .input-error ~ small::before {
+    content: 'Ⓘ';
+    margin-right: .4rem;
+  }
 
   & + & {
     margin-top: 2.4rem;
@@ -86,6 +111,7 @@ const InputGroup = props => {
       <Label htmlFor={props.id}>
         {props.label}
       </Label>
+      <small>{props.textError}</small>
     </Group>
   )
 }
