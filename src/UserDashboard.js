@@ -58,9 +58,6 @@ const DamageIndicator = styled.div`
 //  Change saving data method 
 //    `-> 1st : send to localStorgae
 //    `-> then : update states of arrow function
-//? 2
-//  Add a 'back to menu' button
-//  (state === localStorage) ? goto : update and then goto
 
 const Dashboard = () => {
   const [pcID, setPCID] = useState(-1);
